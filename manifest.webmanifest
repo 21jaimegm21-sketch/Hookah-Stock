@@ -1,1 +1,22 @@
-{"name":"Mi Stock","short_name":"Mi Stock","start_url":"./","scope":"./","display":"standalone","background_color":"#101010","theme_color":"#101010","description":"Inventario local de tabaco y carbones","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png"}]}
+{
+  "name": "Night Chill Zone · Mi Stock",
+  "short_name": "Night Chill",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090511",
+  "theme_color": "#10051d",
+  "description": "Control de stock, mezclas y cazoletas de Night Chill Zone",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

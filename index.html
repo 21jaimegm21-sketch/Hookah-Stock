@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi Stock">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<title>Mi Stock</title>
+</head>
+<body>
+<div class="smoke"></div>
+<header><div class="brand">MI <span>STOCK</span></div><div class="subtitle">CONTROL DE INVENTARIO</div></header>
+<main>
+<section class="panel">
+<h2>➕ Añadir tabaco</h2>
+<div class="grid">
+<label>Marca<input id="brand" placeholder="Ej. Adalya"></label>
+<label>Sabor<input id="flavor" placeholder="Ej. Love 66"></label>
+<label>Gramos<input id="grams" type="number" min="1" step="1" placeholder="Ej. 200"></label>
+</div><button id="addTobacco">Añadir tabaco</button>
+</section>
+<section class="panel">
+<h2>🔥 Añadir carbones</h2>
+<label>Unidades<input id="coalAdd" type="number" min="1" step="1" placeholder="Ej. 100"></label>
+<button id="addCoal">Añadir carbones</button>
+</section>
+<section class="panel">
+<h2>📦 Stock actual</h2>
+<div class="coal-stock">Carbones disponibles: <strong id="coalCount">0</strong></div>
+<div id="stockList" class="stock-list"><p class="empty">Todavía no hay tabaco añadido.</p></div>
+</section>
+<section class="panel">
+<h2>➖ Registrar consumo</h2>
+<label>Producto<select id="consumeProduct"><option value="">Selecciona tabaco</option></select></label>
+<label>Gramos utilizados<input id="consumeGrams" type="number" min="1" step="1" placeholder="Ej. 15"></label>
+<button class="secondary" id="useTobacco">Descontar gramos</button>
+<label>Carbones utilizados<input id="coalUse" type="number" min="1" step="1" placeholder="Ej. 2"></label>
+<button class="secondary" id="useCoal">Descontar carbones</button>
+</section>
+<section class="panel">
+<h2>🧾 Movimientos</h2><div id="history" class="history"><p class="empty">Aún no hay movimientos.</p></div>
+<button class="danger" id="clearHistory">Borrar movimientos</button>
+</section>
+</main>
+<footer>Los datos se guardan en este iPhone. No necesitas conexión después de abrir la app por primera vez.</footer>
+<script src="app.js"></script>
+</body></html>

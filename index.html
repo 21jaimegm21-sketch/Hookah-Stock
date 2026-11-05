@@ -1,52 +1,39 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mi Stock">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="styles.css">
-<title>Mi Stock</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#11100f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Mi Stock">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="styles.css"><title>Mi Stock</title>
 </head>
 <body>
-<div class="smoke"></div>
-<header><div class="brand">MI <span>STOCK</span></div><div class="subtitle">CONTROL DE INVENTARIO</div></header>
+<header class="top"><div><div class="brand">MI <span>STOCK</span></div><div class="subtitle">TU INVENTARIO · BAJO CONTROL</div></div><button class="icon-btn" id="backupTop" aria-label="Copia de seguridad">⇧</button></header>
 <main>
-<section class="panel">
-<h2>➕ Añadir tabaco</h2>
-<div class="grid">
-<label>Marca<input id="brand" placeholder="Ej. Adalya"></label>
-<label>Sabor<input id="flavor" placeholder="Ej. Love 66"></label>
-<label>Gramos<input id="grams" type="number" min="1" step="1" placeholder="Ej. 200"></label>
-</div><button id="addTobacco">Añadir tabaco</button>
+<section class="hero"><div><div class="eyebrow">RESUMEN GENERAL</div><h1>Tu colección,<br><span>en orden.</span></h1><p>Controla tus cachimbas, cazoletas, tabacos y accesorios desde un solo sitio.</p></div><div class="hero-mark">MS</div></section>
+<section class="stats" aria-label="Resumen"><article><small>REFERENCIAS</small><strong id="statItems">0</strong><span>productos</span></article><article><small>STOCK TOTAL</small><strong id="statUnits">0</strong><span>unidades / gramos</span></article><article><small>TABACOS</small><strong id="statTobacco">0</strong><span>referencias</span></article></section>
+<nav class="tabs"><button class="tab active" data-tab="inventory">Inventario</button><button class="tab" data-tab="add">Añadir</button><button class="tab" data-tab="activity">Actividad</button><button class="tab" data-tab="tools">Ajustes</button></nav>
+<section id="view-inventory" class="view active">
+<div class="section-head"><div><div class="eyebrow">TU COLECCIÓN</div><h2>Inventario</h2></div><button class="primary small" id="newItem">＋ Añadir</button></div>
+<input id="search" class="search" type="search" placeholder="Buscar por nombre, marca o sabor…" aria-label="Buscar inventario">
+<div id="filters" class="filters"><button class="filter active" data-filter="all">Todo</button><button class="filter" data-filter="tobacco">Tabacos</button><button class="filter" data-filter="hookah">Cachimbas</button><button class="filter" data-filter="bowl">Cazoletas</button><button class="filter" data-filter="accessory">Accesorios</button><button class="filter" data-filter="coal">Carbones</button></div>
+<div id="inventoryList" class="inventory-list"></div>
 </section>
-<section class="panel">
-<h2>🔥 Añadir carbones</h2>
-<label>Unidades<input id="coalAdd" type="number" min="1" step="1" placeholder="Ej. 100"></label>
-<button id="addCoal">Añadir carbones</button>
+<section id="view-add" class="view">
+<div class="section-head"><div><div class="eyebrow">AMPLÍA TU COLECCIÓN</div><h2 id="formTitle">Añadir producto</h2></div></div>
+<form id="itemForm" class="panel">
+<input type="hidden" id="itemId">
+<label>Categoría<select id="category"><option value="tobacco">Tabaco</option><option value="hookah">Cachimba</option><option value="bowl">Cazoleta</option><option value="accessory">Accesorio</option><option value="coal">Carbones</option></select></label>
+<div class="form-grid"><label>Nombre / modelo<input id="name" required maxlength="70" placeholder="Ej. Mini Rook"></label><label>Marca<input id="brand" maxlength="50" placeholder="Ej. Alpaca"></label></div>
+<label id="flavorWrap">Sabor<input id="flavor" maxlength="60" placeholder="Ej. Love 66"></label>
+<div class="form-grid"><label id="quantityLabel">Cantidad<input id="quantity" type="number" min="0" step="1" required placeholder="Ej. 200"></label><label>Unidad<select id="unit"><option value="g">Gramos (g)</option><option value="ud">Unidades</option><option value="pack">Paquetes</option></select></label></div>
+<label>Notas (opcional)<textarea id="notes" rows="2" maxlength="240" placeholder="Color, tamaño, edición…"></textarea></label>
+<div class="form-actions"><button type="submit" class="primary" id="saveItem">Guardar producto</button><button type="button" class="ghost hidden" id="cancelEdit">Cancelar</button></div>
+</form>
 </section>
-<section class="panel">
-<h2>📦 Stock actual</h2>
-<div class="coal-stock">Carbones disponibles: <strong id="coalCount">0</strong></div>
-<div id="stockList" class="stock-list"><p class="empty">Todavía no hay tabaco añadido.</p></div>
-</section>
-<section class="panel">
-<h2>➖ Registrar consumo</h2>
-<label>Producto<select id="consumeProduct"><option value="">Selecciona tabaco</option></select></label>
-<label>Gramos utilizados<input id="consumeGrams" type="number" min="1" step="1" placeholder="Ej. 15"></label>
-<button class="secondary" id="useTobacco">Descontar gramos</button>
-<label>Carbones utilizados<input id="coalUse" type="number" min="1" step="1" placeholder="Ej. 2"></label>
-<button class="secondary" id="useCoal">Descontar carbones</button>
-</section>
-<section class="panel">
-<h2>🧾 Movimientos</h2><div id="history" class="history"><p class="empty">Aún no hay movimientos.</p></div>
-<button class="danger" id="clearHistory">Borrar movimientos</button>
-</section>
+<section id="view-activity" class="view"><div class="section-head"><div><div class="eyebrow">TRAZABILIDAD</div><h2>Movimientos</h2></div><button class="ghost small" id="clearHistory">Vaciar</button></div><div id="history" class="history-list"></div></section>
+<section id="view-tools" class="view"><div class="section-head"><div><div class="eyebrow">TUS DATOS</div><h2>Ajustes y copias</h2></div></div><div class="panel tool-card"><div class="tool-icon">⇧</div><div><h3>Exportar copia</h3><p>Guarda todo tu inventario y movimientos en un archivo JSON.</p></div><button class="primary" id="exportBtn">Exportar</button></div><div class="panel tool-card"><div class="tool-icon">⇩</div><div><h3>Importar copia</h3><p>Recupera una copia anterior. Los datos actuales se reemplazarán.</p></div><input type="file" id="importFile" accept=".json,application/json" hidden><button class="secondary" id="importBtn">Importar</button></div><div class="panel note"><strong>Privacidad y almacenamiento</strong><p>Mi Stock guarda los datos en el almacenamiento local de este dispositivo. Exporta una copia periódicamente y antes de cambiar de iPhone o borrar los datos del navegador.</p></div><div class="version">MI STOCK · EDICIÓN 2.0</div></section>
 </main>
-<footer>Los datos se guardan en este iPhone. No necesitas conexión después de abrir la app por primera vez.</footer>
+<dialog id="detailDialog"><form method="dialog" class="dialog-inner"><button class="close" aria-label="Cerrar">×</button><div id="detailContent"></div></form></dialog>
+<div id="toast" class="toast" role="status"></div>
+<footer>MI STOCK <span>·</span> HECHO PARA TU COLECCIÓN</footer>
 <script src="app.js"></script>
 </body></html>

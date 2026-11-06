@@ -38,9 +38,11 @@
   <button id="addCoal">Añadir carbones</button>
 </section>
 <section class="panel">
-  <h2>📦 Stock actual</h2>
-  <div id="coalList" class="stock-list"></div>
-  <div id="stockList" class="stock-list"></div>
+  <details class="fold">
+    <summary>📦 Stock actual</summary>
+    <div id="coalList" class="stock-list"></div>
+    <div id="stockList" class="stock-list"></div>
+  </details>
 </section>
 <section class="panel">
   <h2>🏺 Añadir cazoleta</h2>
@@ -66,8 +68,10 @@
   <div id="mixResult" class="result"></div>
 </section>
 <section class="panel">
-  <h2>🧾 Mis mezclas</h2>
-  <div id="mixList" class="history"></div>
+  <details class="fold">
+    <summary>🧾 Mis mezclas</summary>
+    <div id="mixList" class="history"></div>
+  </details>
 </section>
 <section class="panel">
   <h2>➖ Registrar consumo manual</h2>
@@ -84,14 +88,16 @@
   <div id="statsSummary" class="result"></div>
   <h3>Tabaco gastado por sabor</h3><div id="tobaccoChart" class="stats-chart"></div>
   <h3>Carbones gastados por día</h3><div id="coalChart" class="stats-chart"></div>
-  <h3>Consumo diario</h3><div id="dailyStats" class="history"></div><h3>Sesiones registradas manualmente</h3><div id="manualSessionsList" class="history"></div><h3>Mezclas registradas en estadísticas</h3><div id="statsMixList" class="history"></div>
+  <h3>Consumo diario</h3><div id="dailyStats" class="history"></div><details class="fold subfold"><summary>Sesiones registradas</summary><div id="manualSessionsList" class="history"></div></details><h3>Mezclas registradas en estadísticas</h3><div id="statsMixList" class="history"></div>
   <label>Sesiones adicionales registradas<input id="sessionCount" type="number" min="1" step="1" placeholder="Ej. 1"></label>
   <button class="secondary" id="addSessions">Registrar sesiones</button>
 </section>
 <section class="panel">
-  <h2>📜 Movimientos</h2>
-  <div id="history" class="history"></div>
-  <button class="danger" id="clearHistory">Borrar movimientos</button>
+  <details class="fold">
+    <summary>📜 Movimientos</summary>
+    <div id="history" class="history"></div>
+    <button class="danger" id="clearHistory">Borrar movimientos</button>
+  </details>
 </section>
 </main>
 <footer>Tu stock se guarda en este dispositivo. <a href="https://www.instagram.com/NightChillZone/" target="_blank" rel="noopener">@NightChillZone</a></footer>

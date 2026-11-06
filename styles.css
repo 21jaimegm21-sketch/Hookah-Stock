@@ -47,3 +47,13 @@ footer a{color:#d78aff}
 .stat-fill{height:100%;background:linear-gradient(90deg,#7112b5,#d16aff);border-radius:20px;min-width:2px}
 .stat-day{padding:10px 0;border-bottom:1px solid #382544;font-size:13px;line-height:1.7}
 .panel h3{font-size:14px;color:#e4b6ff;margin:18px 0 8px}
+
+/* Listas largas plegables */
+.fold{border:0;margin:0;padding:0}
+.fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;color:#d978ff;font-size:20px;font-weight:800;padding:4px 0 12px;user-select:none}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::after{content:'＋';margin-left:auto;color:#d978ff;font-size:22px;font-weight:700}
+.fold[open]>summary::after{content:'−'}
+.fold[open]>summary{margin-bottom:8px}
+.subfold{margin:16px 0 4px;padding-top:2px}
+.subfold>summary{font-size:14px;color:#e4b6ff;padding:8px 0}

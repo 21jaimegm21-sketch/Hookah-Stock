@@ -39,14 +39,12 @@ function renderStats(){
  $('tobaccoChart').innerHTML=bars(tobacco,'g');
  $('coalChart').innerHTML=bars(coal,'uds.');
  $('dailyStats').innerHTML=Object.keys(days).sort().reverse().map(day=>{const d=days[day],fl=Object.entries(d.tobacco).map(([n,g])=>`${esc(n)}: ${fmt(g)} g`).join('<br>')||'Sin tabaco registrado';return `<div class="stat-day"><strong>${day}</strong><br>${fl}<br>Carbones: ${d.coal} · Sesiones: ${d.sessions}</div>`}).join('')||'<p class="empty">No hay actividad registrada en este mes.</p>';
- const mixGroups={};
- events.filter(e=>e.mixId).forEach(e=>{
-  const g=mixGroups[e.mixId]||(mixGroups[e.mixId]={date:e.date,items:[],grams:0,sessions:0});
-  if(e.kind==='tobacco'){g.items.push(`${e.name}: ${fmt(e.grams)} g`);g.grams+=Number(e.grams||0);}
-  if(e.kind==='session')g.sessions+=Number(e.count||0);
- });
- const groups=Object.entries(mixGroups);
- $('statsMixList').innerHTML=groups.length?groups.map(([id,g])=>`<div class="history-item"><strong>Mezcla · ${esc(g.date)}</strong><div>${g.items.map(esc).join('<br>')}</div><small>${fmt(g.grams)} g · ${g.sessions} sesiones</small><button class="delete" data-delete-stat-mix="${esc(id)}">🗑 Eliminar de estadísticas</button></div>`).join(''):'<p class="empty">No hay mezclas registradas en las estadísticas de este mes.</p>';
+ // Mostrar todas las mezclas guardadas, sin depender del mes seleccionado.
+ $('statsMixList').innerHTML=data.mixes.length?data.mixes.map(m=>{
+  const parts=(m.parts||[]).map(x=>`${esc(x.name)}: ${fmt(x.grams)} g`).join('<br>');
+  const linked=!!m.id&&data.consumption.some(e=>e.mixId===m.id);
+  return `<div class="history-item"><strong>Mezcla · ${esc(m.date||'Sin fecha')}</strong><div>${parts||esc(m.bowl||'Mezcla guardada')}</div><small>${fmt(m.total||0)} g</small><button class="delete" data-delete-stat-mix="${esc(m.id||'')}" ${!linked?'disabled':''}>🗑 Eliminar de estadísticas</button>${!linked?'<small>Sin registros estadísticos vinculados para eliminar.</small>':''}</div>`;
+ }).join(''):'<p class="empty">No hay mezclas guardadas.</p>';
 
 }
 

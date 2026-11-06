@@ -77,11 +77,19 @@ function updateCatalogSuggestions(){
  $('brandCatalog').innerHTML=brands.map(b=>`<option value="${esc(b)}"></option>`).join('');
  const typed=$('brand').value.trim().toLocaleLowerCase('es');
  const match=brands.find(b=>b.toLocaleLowerCase('es')===typed);
+ const flavorSelect=$('flavor');
  const flavors=match?flavorCatalog[match]:[];
- $('flavorCatalog').innerHTML=flavors.map(f=>`<option value="${esc(f)}"></option>`).join('');
+ flavorSelect.innerHTML='<option value="">Selecciona un sabor</option>'+flavors.map(f=>`<option value="${esc(f)}">${esc(f)}</option>`).join('');
+ flavorSelect.disabled=!match;
 }
 $('brand').addEventListener('input',updateCatalogSuggestions);
-$('brand').addEventListener('change',()=>{const typed=$('brand').value.trim().toLocaleLowerCase('es');const match=Object.keys(flavorCatalog).find(b=>b.toLocaleLowerCase('es')===typed);if(match)$('brand').value=match;updateCatalogSuggestions();});
+$('brand').addEventListener('change',()=>{
+ const typed=$('brand').value.trim().toLocaleLowerCase('es');
+ const match=Object.keys(flavorCatalog).find(b=>b.toLocaleLowerCase('es')===typed);
+ if(match)$('brand').value=match;
+ updateCatalogSuggestions();
+});
+$('brand').addEventListener('blur',updateCatalogSuggestions);
 function fillSelect(id,items,placeholder,labelFn){
  const el=$(id),previous=el.value;
  el.innerHTML=`<option value="">${placeholder}</option>`+items.map((x,i)=>`<option value="${i}">${esc(labelFn(x))}</option>`).join('');

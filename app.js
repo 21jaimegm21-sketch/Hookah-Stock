@@ -76,8 +76,11 @@ function addMixRow(defaultPercent=''){
 }
 function render(){
  refreshMixSelectors();
- $('stockList').innerHTML=data.tobacco.length?data.tobacco.map((p,i)=>`<div class="stock-item"><div><strong>${esc(p.brand)} · ${esc(p.flavor)}</strong><span class="amount">${fmt(p.grams)} g</span></div><button class="delete" data-delete-tobacco="${i}">🗑 Eliminar</button></div>`).join(''):'<p class="empty">Todavía no hay tabaco añadido.</p>';
- $('coalList').innerHTML=data.coals.length?data.coals.map((c,i)=>`<div class="stock-item"><div><strong>Carbón · ${esc(c.brand)}</strong><span class="amount">${Number(c.units)||0} uds.</span></div><button class="delete" data-delete-coal="${i}">🗑 Eliminar marca</button></div>`).join(''):'<p class="empty">Todavía no hay carbones añadidos.</p>';
+ $('stockList').innerHTML=data.tobacco.length?data.tobacco.map((p,i)=>`<div class="stock-item"><div><strong>${esc(p.brand)} · ${esc(p.flavor)}</strong><span class="amount">${fmt(p.grams)} g</span>${Number(p.grams)<20?'<span class="stock-warning">⚠️ STOCK BAJO · Menos de 20 g</span>':''}</div><button class="delete" data-delete-tobacco="${i}">🗑 Eliminar</button></div>`).join(''):'<p class="empty">Todavía no hay tabaco añadido.</p>';
+ $('coalList').innerHTML=data.coals.length?data.coals.map((c,i)=>`<div class="stock-item"><div><strong>Carbón · ${esc(c.brand)}</strong><span class="amount">${Number(c.units)||0} uds.</span>${Number(c.units)<20?'<span class="stock-warning">⚠️ STOCK BAJO · Menos de 20 carbones</span>':''}</div><button class="delete" data-delete-coal="${i}">🗑 Eliminar marca</button></div>`).join(''):'<p class="empty">Todavía no hay carbones añadidos.</p>';
+ const lowTobacco=data.tobacco.filter(p=>Number(p.grams)<20);
+ const lowCoal=data.coals.filter(c=>Number(c.units)<20);
+ $('lowStockAlerts').innerHTML=(lowTobacco.length||lowCoal.length)?`<div class="low-stock-banner"><strong>⚠️ Aviso de stock bajo</strong>${lowTobacco.map(p=>`<div>Tabaco: ${esc(p.brand)} · ${esc(p.flavor)} — ${fmt(p.grams)} g</div>`).join('')}${lowCoal.map(c=>`<div>Carbón: ${esc(c.brand)} — ${Number(c.units)||0} unidades</div>`).join('')}</div>`:'<div class="stock-ok">✓ Todo el stock está en 20 o más</div>';
  fillSelect('consumeProduct',data.tobacco,'Selecciona tabaco',p=>`${p.brand} · ${p.flavor} (${fmt(p.grams)} g)`);
  fillSelect('mixCoal',data.coals,'Selecciona marca de carbón',c=>`${c.brand} (${c.units} uds.)`);
  fillSelect('mixBowl',data.bowls,'Selecciona cazoleta',b=>`${b.name} · ${b.brand} (${fmt(b.grams)} g)`);

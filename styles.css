@@ -57,3 +57,9 @@ footer a{color:#d78aff}
 .fold[open]>summary{margin-bottom:8px}
 .subfold{margin:16px 0 4px;padding-top:2px}
 .subfold>summary{font-size:14px;color:#e4b6ff;padding:8px 0}
+
+/* Alertas de inventario por debajo del umbral de 20 */
+.low-stock-banner{background:#3b1728;border:1px solid #ff668f;border-radius:12px;padding:12px 14px;margin:8px 0 14px;color:#ffd1df;line-height:1.55}
+.low-stock-banner strong{display:block;color:#ff91b2;margin-bottom:5px}
+.stock-warning{display:block;margin-top:5px;color:#ff91b2;font-size:.88em;font-weight:800}
+.stock-ok{margin:8px 0 14px;padding:10px 12px;border:1px solid #4c9b79;border-radius:10px;color:#a8e8c8;background:#10271f}

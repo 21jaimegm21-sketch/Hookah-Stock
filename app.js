@@ -39,6 +39,12 @@ function renderStats(){
  $('tobaccoChart').innerHTML=bars(tobacco,'g');
  $('coalChart').innerHTML=bars(coal,'uds.');
  $('dailyStats').innerHTML=Object.keys(days).sort().reverse().map(day=>{const d=days[day],fl=Object.entries(d.tobacco).map(([n,g])=>`${esc(n)}: ${fmt(g)} g`).join('<br>')||'Sin tabaco registrado';return `<div class="stat-day"><strong>${day}</strong><br>${fl}<br>Carbones: ${d.coal} · Sesiones: ${d.sessions}</div>`}).join('')||'<p class="empty">No hay actividad registrada en este mes.</p>';
+ // Sesiones añadidas manualmente: se pueden borrar desde Estadísticas sin tocar las mezclas.
+ let manualList=$('manualSessionsList');
+ if(!manualList){manualList=document.createElement('div');manualList.id='manualSessionsList';$('dailyStats').insertAdjacentElement('afterend',manualList);}
+ const manual=data.consumption.map((e,i)=>({e,i})).filter(x=>x.e.kind==='session').sort((a,b)=>String(b.e.date).localeCompare(String(a.e.date)));
+ manualList.innerHTML='<h3>Sesiones registradas manualmente</h3>'+(manual.length?manual.map(({e,i})=>`<div class="history-item"><strong>${esc(e.date||'Sin fecha')}</strong><div>${Number(e.count||0)} sesión(es)</div><button class="delete" data-delete-manual-session="${i}">🗑 Eliminar sesión</button></div>`).join(''):'<p class="empty">No hay sesiones manuales registradas.</p>');
+
  // Mostrar todas las mezclas guardadas, sin depender del mes seleccionado.
  $('statsMixList').innerHTML=data.mixes.length?data.mixes.map(m=>{
   const parts=(m.parts||[]).map(x=>`${esc(x.name)}: ${fmt(x.grams)} g`).join('<br>');
@@ -116,6 +122,16 @@ document.addEventListener('click',e=>{
  if(el.dataset.deleteCoal!==undefined){const i=+el.dataset.deleteCoal,c=data.coals[i];if(c&&confirm(`¿Eliminar la marca de carbón ${c.brand} y sus ${c.units} unidades?`)){data.coals.splice(i,1);log(`Eliminada marca de carbón ${c.brand}`);save();}}
  if(el.dataset.deleteBowl!==undefined){const i=+el.dataset.deleteBowl,b=data.bowls[i];if(b&&confirm(`¿Eliminar la cazoleta ${b.name} · ${b.brand}?`)){data.bowls.splice(i,1);log(`Eliminada cazoleta ${b.name} · ${b.brand}`);save();}}
  if(el.dataset.deleteMix!==undefined){const i=+el.dataset.deleteMix;if(confirm('¿Eliminar esta mezcla y sus datos asociados de las estadísticas? Los gramos descontados NO se devolverán al stock.')){const mix=data.mixes[i];if(mix){if(mix.id){data.consumption=data.consumption.filter(e=>e.mixId!==mix.id);data.history=data.history.filter(h=>h.mixId!==mix.id);}data.mixes.splice(i,1);save();}}}
+});
+document.addEventListener('click',e=>{
+ const btn=e.target.closest('[data-delete-manual-session]');
+ if(!btn)return;
+ const index=Number(btn.dataset.deleteManualSession);
+ const item=data.consumption[index];
+ if(!item||item.kind!=='session')return;
+ if(!confirm(`¿Eliminar el registro de ${Number(item.count||0)} sesión(es) del ${item.date||'sin fecha'}?`))return;
+ data.consumption.splice(index,1);
+ save();
 });
 document.addEventListener('click',e=>{
  const btn=e.target.closest('[data-delete-stat-mix]');

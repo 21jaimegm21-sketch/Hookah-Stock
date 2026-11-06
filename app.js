@@ -34,7 +34,18 @@ function renderStats(){
  if(e.kind==='session')days[day].sessions+=Number(e.count||0);
  });
  const totalGrams=Object.values(tobacco).reduce((a,b)=>a+b,0),totalCoal=Object.values(coal).reduce((a,b)=>a+b,0),totalSessions=Object.values(days).reduce((a,d)=>a+d.sessions,0);
- $('statsSummary').innerHTML=`<strong>${month}</strong><br>Tabaco: ${fmt(totalGrams)} g · Carbones: ${totalCoal} · Sesiones: ${totalSessions}<br>Media por sesión: ${totalSessions?fmt(totalGrams/totalSessions):'—'} g y ${totalSessions?fmt(totalCoal/totalSessions):'—'} carbones`;
+ $('statsSummary').innerHTML=`<strong>${month}</strong><br>Tabaco consumido: ${fmt(totalGrams)} g · Carbones: ${totalCoal} · Sesiones: ${totalSessions}<br>Media por sesión: ${totalSessions?fmt(totalGrams/totalSessions):'—'} g y ${totalSessions?fmt(totalCoal/totalSessions):'—'} carbones`;
+ // Comparativa con el mes anterior seleccionado.
+ const [yy,mm]=month.split('-').map(Number), prevDate=new Date(yy,mm-2,1), prevMonth=`${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
+ const prevEvents=data.consumption.filter(e=>e.date&&e.date.startsWith(prevMonth));
+ const prevGrams=prevEvents.filter(e=>e.kind==='tobacco').reduce((s,e)=>s+Number(e.grams||0),0);
+ const prevCoal=prevEvents.filter(e=>e.kind==='coal').reduce((s,e)=>s+Number(e.units||0),0);
+ const prevSessions=prevEvents.filter(e=>e.kind==='session').reduce((s,e)=>s+Number(e.count||0),0);
+ $('monthCompare').innerHTML=`<div class="stat-day"><strong>Mes actual</strong>: ${fmt(totalGrams)} g · ${totalCoal} carbones · ${totalSessions} sesiones</div><div class="stat-day"><strong>Mes anterior (${prevMonth})</strong>: ${fmt(prevGrams)} g · ${prevCoal} carbones · ${prevSessions} sesiones</div>`;
+ // Agrupar consumo del mes seleccionado en semanas naturales del mes.
+ const weeks={};
+ events.forEach(e=>{const d=new Date(`${e.date}T12:00:00`),w=Math.ceil(d.getDate()/7),key=`Semana ${w}`;(weeks[key]??={grams:0,coal:0,sessions:0});if(e.kind==='tobacco')weeks[key].grams+=Number(e.grams||0);if(e.kind==='coal')weeks[key].coal+=Number(e.units||0);if(e.kind==='session')weeks[key].sessions+=Number(e.count||0)});
+ $('weeklyStats').innerHTML=Object.entries(weeks).map(([k,v])=>`<div class="stat-day"><strong>${k}</strong><br>Tabaco: ${fmt(v.grams)} g · Carbones: ${v.coal} · Sesiones: ${v.sessions}</div>`).join('')||'<p class="empty">No hay actividad para este mes.</p>';
  const bars=(obj,suffix)=>{const entries=Object.entries(obj).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...entries.map(x=>x[1]));return entries.length?entries.map(([name,val])=>`<div class="stat-line"><span>${esc(name)}</span><div class="stat-track"><div class="stat-fill" style="width:${val/max*100}%"></div></div><strong>${fmt(val)} ${suffix}</strong></div>`).join(''):'<p class="empty">Todavía no hay consumos registrados este mes.</p>'};
  $('tobaccoChart').innerHTML=bars(tobacco,'g');
  $('coalChart').innerHTML=bars(coal,'uds.');

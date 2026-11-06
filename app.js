@@ -4,12 +4,17 @@ const LEGACY_KEY='mi-stock-v2';
 const readJSON=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch{return null}};
 const old1=readJSON(KEY), old2=readJSON(LEGACY_KEY);
 let source=old2 || old1 || {};
+// Recupera inventario de ambas claves: una clave v2 vacía no debe ocultar
+// el tabaco que todavía exista en la copia v1 del mismo dispositivo.
+const pickArray=(field)=>Array.isArray(source[field]) && source[field].length
+ ? source[field]
+ : (Array.isArray(old1?.[field]) ? old1[field] : (Array.isArray(source[field]) ? source[field] : []));
 const data={
- tobacco:Array.isArray(source.tobacco)?source.tobacco:[],
- coals:Array.isArray(source.coals)?source.coals.map(c=>typeof c==='string'?{brand:c,units:0}:c):[],
- history:Array.isArray(source.history)?source.history:[],
- bowls:Array.isArray(source.bowls)?source.bowls:[],
- mixes:Array.isArray(source.mixes)?source.mixes:[]
+ tobacco:pickArray('tobacco'),
+ coals:pickArray('coals').map(c=>typeof c==='string'?{brand:c,units:0}:c),
+ history:pickArray('history'),
+ bowls:pickArray('bowls'),
+ mixes:pickArray('mixes')
 };
 // Si existe v2, se toma como la versión más reciente. La copia v2 original no se borra.
 if(typeof source.coals==='number' && source.coals>0) data.coals=[{brand:'Sin marca (stock anterior)',units:source.coals}];

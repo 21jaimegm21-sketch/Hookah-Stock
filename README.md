@@ -1,14 +1,5 @@
-# Mi Stock – correcciones de mezclas y estadísticas
+Mi Stock – Night Chill Zone
 
-## Correcciones
-- Los selectores de tabaco de las mezclas se actualizan cuando cambia el inventario.
-- Al eliminar un tabaco del inventario, deja de estar disponible en las mezclas.
-- Al guardar una mezcla nueva, queda vinculada a sus eventos de consumo y sesión.
-- Al eliminar una mezcla nueva, también se eliminan sus datos asociados de las estadísticas y su movimiento asociado. **No se devuelven gramos al inventario**, para evitar reponer stock por error.
+Actualización: al usar «Eliminar de estadísticas» se borran únicamente los registros de consumo y sesiones vinculados a esa mezcla. La mezcla permanece en «Mis mezclas» y su historial también se conserva. Los gramos descontados no se devuelven al inventario.
 
-## Importante sobre mezclas anteriores
-Las mezclas creadas antes de esta actualización no tienen un identificador que las vincule de forma inequívoca a los eventos históricos. Por seguridad, al borrar una mezcla antigua se elimina su ficha, pero no se borran consumos históricos que podrían pertenecer a otros registros.
-
-## Instalación
-Antes de sustituir archivos en GitHub, exporta una copia de seguridad desde la aplicación. No desinstales la app ni borres los datos de Safari.
-Sustituye los archivos de la raíz del repositorio por los de este ZIP y espera a que GitHub Pages publique los cambios.
+Antes de actualizar, exporta una copia de seguridad JSON desde la aplicación. Después, sustituye los archivos del repositorio de GitHub Pages por los incluidos en este ZIP y espera a que se publique la web. No borres los datos del sitio ni desinstales la app.

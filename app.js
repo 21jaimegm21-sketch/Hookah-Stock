@@ -125,8 +125,7 @@ document.addEventListener('click',e=>{
  const id=btn.dataset.deleteStatMix;
  if(!confirm('¿Eliminar esta mezcla de las estadísticas? Se borrarán sus registros de consumo y sesión. Los gramos NO se devolverán al stock.'))return;
  data.consumption=data.consumption.filter(item=>item.mixId!==id);
- data.history=data.history.filter(item=>item.mixId!==id);
- data.mixes=data.mixes.filter(item=>item.id!==id);
+ // La mezcla y su historial se conservan; solo se quita su impacto estadístico.
  save();
 });
 $('clearHistory').onclick=()=>{if(confirm('¿Borrar todo el historial de movimientos?')){data.history=[];save();}};

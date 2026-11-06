@@ -23,3 +23,6 @@ Aplicación web progresiva (PWA) para gestionar tabaco, carbones, cazoletas y me
 
 ## Datos
 Los datos se guardan localmente en el navegador del dispositivo mediante `localStorage`. No se sincronizan automáticamente entre dispositivos; publicar una nueva versión en GitHub no borra el stock guardado en el iPhone.
+
+- Estadísticas mensuales por sabor, carbones por día y sesiones.
+- Historial diario de consumos y medias por sesión. Los registros comienzan al instalar esta versión; no se pueden reconstruir consumos antiguos que no se guardaron como eventos.

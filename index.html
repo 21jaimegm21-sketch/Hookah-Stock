@@ -75,6 +75,16 @@
   <button class="secondary" id="useCoal">Descontar carbones</button>
 </section>
 <section class="panel">
+  <h2>📊 Estadísticas y consumo</h2>
+  <label>Mes a consultar<input id="statsMonth" type="month"></label>
+  <div id="statsSummary" class="result"></div>
+  <h3>Tabaco gastado por sabor</h3><div id="tobaccoChart" class="stats-chart"></div>
+  <h3>Carbones gastados por día</h3><div id="coalChart" class="stats-chart"></div>
+  <h3>Consumo diario</h3><div id="dailyStats" class="history"></div>
+  <label>Sesiones adicionales registradas<input id="sessionCount" type="number" min="1" step="1" placeholder="Ej. 1"></label>
+  <button class="secondary" id="addSessions">Registrar sesiones</button>
+</section>
+<section class="panel">
   <h2>📜 Movimientos</h2>
   <div id="history" class="history"></div>
   <button class="danger" id="clearHistory">Borrar movimientos</button>

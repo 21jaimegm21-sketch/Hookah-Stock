@@ -24,9 +24,11 @@ if(old2) {
 }
 const $=id=>document.getElementById(id);
 const fmt=n=>Number(n).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
-const save=()=>{localStorage.setItem(KEY,JSON.stringify(data));render();renderStats()};
+let save=()=>{localStorage.setItem(KEY,JSON.stringify(data));render();renderStats()};
 const log=text=>{data.history.unshift({text,at:new Date().toLocaleString('es-ES')});data.history=data.history.slice(0,150)};
 data.consumption=Array.isArray(source.consumption)?source.consumption:[];
+data.incomes=Array.isArray(source.incomes)?source.incomes:[];
+data.sessions=Array.isArray(source.sessions)?source.sessions:[];
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const record=(kind,details)=>data.consumption.push({date:today(),kind,...details});
 const monthNow=()=>today().slice(0,7);

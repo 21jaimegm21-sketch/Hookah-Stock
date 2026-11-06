@@ -43,11 +43,12 @@ function renderStats(){
  const manual=data.consumption.map((e,i)=>({e,i})).filter(x=>x.e.kind==='session' && !x.e.mixId).sort((a,b)=>String(b.e.date).localeCompare(String(a.e.date)));
  $('manualSessionsList').innerHTML=manual.length?manual.map(({e,i})=>`<div class="history-item"><strong>${esc(e.date||'Sin fecha')}</strong><div>${Number(e.count||0)} sesión(es)</div><button class="delete" data-delete-manual-session="${i}">🗑 Eliminar sesión</button></div>`).join(''):'<p class="empty">No hay sesiones manuales registradas.</p>';
 
- // Mostrar todas las mezclas guardadas, sin depender del mes seleccionado.
- $('statsMixList').innerHTML=data.mixes.length?data.mixes.map(m=>{
+ // Mostrar solo las mezclas que siguen incluidas en estadísticas.
+ const statsMixes=data.mixes.filter(m=>!m.statsExcluded);
+ $('statsMixList').innerHTML=statsMixes.length?statsMixes.map(m=>{
   const parts=(m.parts||[]).map(x=>`${esc(x.name)}: ${fmt(x.grams)} g`).join('<br>');
   const linked=!!m.id&&data.consumption.some(e=>e.mixId===m.id);
-  return `<div class="history-item"><strong>Mezcla · ${esc(m.date||'Sin fecha')}</strong><div>${parts||esc(m.bowl||'Mezcla guardada')}</div><small>${fmt(m.total||0)} g</small><button class="delete" data-delete-stat-mix="${esc(m.id||'')}" ${!linked?'disabled':''}>🗑 Eliminar de estadísticas</button>${!linked?'<small>Sin registros estadísticos vinculados para eliminar.</small>':''}</div>`;
+  return `<div class="history-item"><strong>Mezcla · ${esc(m.date||'Sin fecha')}</strong><div>${parts||esc(m.bowl||'Mezcla guardada')}</div><small>${fmt(m.total||0)} g</small><button class="delete" data-delete-stat-mix="${esc(m.id||'')}" ${!m.id?'disabled':''}>🗑 Eliminar de estadísticas</button>${!linked?'<small>Sin registros de consumo vinculados; se ocultará de esta lista.</small>':''}</div>`;
  }).join(''):'<p class="empty">No hay mezclas guardadas.</p>';
 
 }
@@ -137,7 +138,9 @@ document.addEventListener('click',e=>{
  const id=btn.dataset.deleteStatMix;
  if(!confirm('¿Eliminar esta mezcla de las estadísticas? Se borrarán sus registros de consumo y sesión. Los gramos NO se devolverán al stock.'))return;
  data.consumption=data.consumption.filter(item=>item.mixId!==id);
- // La mezcla y su historial se conservan; solo se quita su impacto estadístico.
+ const mix=data.mixes.find(item=>String(item.id)===String(id));
+ if(mix)mix.statsExcluded=true;
+ // La mezcla permanece en Mis mezclas; solo se oculta de Estadísticas.
  save();
 });
 $('clearHistory').onclick=()=>{if(confirm('¿Borrar todo el historial de movimientos?')){data.history=[];save();}};

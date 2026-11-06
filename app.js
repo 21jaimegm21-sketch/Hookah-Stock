@@ -79,7 +79,7 @@ function render(){
  $('stockList').innerHTML=data.tobacco.length?data.tobacco.map((p,i)=>`<div class="stock-item"><div><strong>${esc(p.brand)} · ${esc(p.flavor)}</strong><span class="amount">${fmt(p.grams)} g</span></div><button class="delete" data-delete-tobacco="${i}">🗑 Eliminar</button></div>`).join(''):'<p class="empty">Todavía no hay tabaco añadido.</p>';
  $('coalList').innerHTML=data.coals.length?data.coals.map((c,i)=>`<div class="stock-item"><div><strong>Carbón · ${esc(c.brand)}</strong><span class="amount">${Number(c.units)||0} uds.</span></div><button class="delete" data-delete-coal="${i}">🗑 Eliminar marca</button></div>`).join(''):'<p class="empty">Todavía no hay carbones añadidos.</p>';
  fillSelect('consumeProduct',data.tobacco,'Selecciona tabaco',p=>`${p.brand} · ${p.flavor} (${fmt(p.grams)} g)`);
- fillSelect('consumeCoal',data.coals,'Selecciona marca',c=>`${c.brand} (${c.units} uds.)`);
+ fillSelect('mixCoal',data.coals,'Selecciona marca de carbón',c=>`${c.brand} (${c.units} uds.)`);
  fillSelect('mixBowl',data.bowls,'Selecciona cazoleta',b=>`${b.name} · ${b.brand} (${fmt(b.grams)} g)`);
  $('bowlList').innerHTML=data.bowls.length?data.bowls.map((b,i)=>`<div class="stock-item"><div><strong>${esc(b.name)} · ${esc(b.brand)}</strong><span class="amount">${fmt(b.grams)} g</span></div><button class="delete" data-delete-bowl="${i}">🗑 Eliminar</button></div>`).join(''):'<p class="empty">Aún no has guardado cazoletas.</p>';
  $('mixList').innerHTML=data.mixes.length?data.mixes.map((m,i)=>`<div class="history-item"><strong>${esc(m.date)} · ${esc(m.bowl)}</strong><div>${esc((m.parts||[]).map(x=>`${x.name}: ${fmt(x.grams)} g (${x.percent}%)`).join(' + '))}</div><small>Total: ${fmt(m.total)} g</small><button class="delete" data-delete-mix="${i}">🗑 Eliminar registro</button></div>`).join(''):'<p class="empty">Todavía no hay mezclas guardadas.</p>';
@@ -94,6 +94,10 @@ $('calculateMix').onclick=()=>{
  refreshMixSelectors();
  const bi=$('mixBowl').value, rows=[...$('mixParts').querySelectorAll('.mix-row')];
  if(bi===''||!rows.length){alert('Selecciona una cazoleta y añade al menos un tabaco.');return}
+ const coalIndex=$('mixCoal').value, coalUnits=Number($('mixCoalUse').value);
+ if(coalIndex===''||!Number.isInteger(coalUnits)||coalUnits<=0){alert('Selecciona una marca de carbón e indica cuántos carbones has utilizado.');return}
+ const coalStock=data.coals[Number(coalIndex)];
+ if(!coalStock||coalUnits>Number(coalStock.units)){alert('No hay suficientes unidades de esa marca de carbón.');return}
  const parts=rows.map(r=>({idx:r.querySelector('.mix-tobacco').value,percent:Number(r.querySelector('.mix-percent').value)}));
  if(parts.some(p=>p.idx===''||!data.tobacco[Number(p.idx)]||!Number.isFinite(p.percent)||p.percent<=0)){alert('Selecciona un tabaco y un porcentaje mayor que 0 en cada fila.');return}
  const indexes=parts.map(p=>Number(p.idx));
@@ -106,15 +110,17 @@ $('calculateMix').onclick=()=>{
  const shortage=calculated.filter(x=>Number(x.tobacco.grams)+1e-8<x.grams);
  if(shortage.length){alert('Stock insuficiente:\\n'+shortage.map(x=>`${x.tobacco.brand} · ${x.tobacco.flavor}: necesitas ${fmt(x.grams)} g y tienes ${fmt(x.tobacco.grams)} g.`).join('\\n'));return}
  calculated.forEach(x=>x.tobacco.grams=Math.round((Number(x.tobacco.grams)-x.grams)*100)/100);
+ coalStock.units=Number(coalStock.units)-coalUnits;
  const mixId=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());
  const mix={id:mixId,date:new Date().toLocaleString('es-ES'),bowl:`${bowl.name} · ${bowl.brand}`,total,parts:calculated.map(x=>({name:`${x.tobacco.brand} · ${x.tobacco.flavor}`,grams:x.grams,percent:x.percent}))};
- data.mixes.unshift(mix);calculated.forEach(x=>record('tobacco',{mixId,name:`${x.tobacco.brand} · ${x.tobacco.flavor}`,grams:x.grams}));record('session',{mixId,count:1});
+ data.mixes.unshift(mix);calculated.forEach(x=>record('tobacco',{mixId,name:`${x.tobacco.brand} · ${x.tobacco.flavor}`,grams:x.grams}));record('coal',{mixId,name:coalStock.brand,units:coalUnits});record('session',{mixId,count:1});
+ $('mixCoalUse').value='';
  data.history.unshift({mixId,text:`Mezcla ${mix.bowl}: ${mix.parts.map(x=>`${fmt(x.grams)} g de ${x.name} (${x.percent}%)`).join(' + ')}. Descontados del stock.`,at:new Date().toLocaleString('es-ES')});
  $('mixResult').innerHTML=`<strong>Mezcla calculada: ${fmt(total)} g</strong><br>${mix.parts.map(x=>`${esc(x.name)}: ${fmt(x.grams)} g (${fmt(x.percent)}%)`).join('<br>')}`;
  save();
 };
 $('useTobacco').onclick=()=>{const raw=$('consumeProduct').value,n=Number($('consumeGrams').value);if(raw===''||!Number.isFinite(n)||n<=0){alert('Selecciona un tabaco e indica los gramos.');return}const p=data.tobacco[Number(raw)];if(!p||Number(p.grams)+1e-8<n){alert('No hay suficientes gramos en stock.');return}p.grams=Math.round((Number(p.grams)-n)*100)/100;log(`Consumidos ${fmt(n)} g de ${p.brand} · ${p.flavor}`);record('tobacco',{name:`${p.brand} · ${p.flavor}`,grams:n});$('consumeGrams').value='';save();};
-$('useCoal').onclick=()=>{const raw=$('consumeCoal').value,n=Number($('coalUse').value);if(raw===''||!Number.isInteger(n)||n<=0){alert('Selecciona una marca e indica unidades válidas.');return}const c=data.coals[Number(raw)];if(!c||n>Number(c.units)){alert('No hay suficientes unidades de esa marca.');return}c.units-=n;log(`Consumidas ${n} unidades de carbón ${c.brand}`);record('coal',{name:c.brand,units:n});$('coalUse').value='';save();};
+
 document.addEventListener('click',e=>{
  const el=e.target.closest('[data-delete-tobacco],[data-delete-coal],[data-delete-bowl],[data-delete-mix]');if(!el)return;
  if(el.dataset.deleteTobacco!==undefined){const i=+el.dataset.deleteTobacco,p=data.tobacco[i];if(p&&confirm(`¿Eliminar ${p.brand} · ${p.flavor} del inventario?`)){data.tobacco.splice(i,1);refreshMixSelectors(true);log(`Eliminado producto ${p.brand} · ${p.flavor}`);save();}}

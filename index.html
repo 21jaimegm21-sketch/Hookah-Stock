@@ -58,6 +58,10 @@
   <div class="mix-heading"><strong>Tabacos de la mezcla</strong><button type="button" id="addMixPart" class="small">＋ Añadir otro tabaco</button></div>
   <div id="mixParts"></div>
   <p class="hint" id="mixHint">Añade todos los tabacos que quieras. Los porcentajes deben sumar exactamente 100 %.</p>
+  <div class="grid">
+    <label>Marca de carbón<select id="mixCoal"><option value="">Selecciona marca de carbón</option></select></label>
+    <label>Carbones utilizados<input id="mixCoalUse" type="number" min="1" step="1" placeholder="Ej. 2"></label>
+  </div>
   <button id="calculateMix">Calcular y descontar stock</button>
   <div id="mixResult" class="result"></div>
 </section>

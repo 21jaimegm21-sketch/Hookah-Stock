@@ -40,7 +40,7 @@ function renderStats(){
  $('coalChart').innerHTML=bars(coal,'uds.');
  $('dailyStats').innerHTML=Object.keys(days).sort().reverse().map(day=>{const d=days[day],fl=Object.entries(d.tobacco).map(([n,g])=>`${esc(n)}: ${fmt(g)} g`).join('<br>')||'Sin tabaco registrado';return `<div class="stat-day"><strong>${day}</strong><br>${fl}<br>Carbones: ${d.coal} · Sesiones: ${d.sessions}</div>`}).join('')||'<p class="empty">No hay actividad registrada en este mes.</p>';
  // Sesiones registradas manualmente: lista visible dentro de Estadísticas.
- const manual=data.consumption.map((e,i)=>({e,i})).filter(x=>x.e.kind==='session' && x.e.manual===true).sort((a,b)=>String(b.e.date).localeCompare(String(a.e.date)));
+ const manual=data.consumption.map((e,i)=>({e,i})).filter(x=>x.e.kind==='session' && !x.e.mixId).sort((a,b)=>String(b.e.date).localeCompare(String(a.e.date)));
  $('manualSessionsList').innerHTML=manual.length?manual.map(({e,i})=>`<div class="history-item"><strong>${esc(e.date||'Sin fecha')}</strong><div>${Number(e.count||0)} sesión(es)</div><button class="delete" data-delete-manual-session="${i}">🗑 Eliminar sesión</button></div>`).join(''):'<p class="empty">No hay sesiones manuales registradas.</p>';
 
  // Mostrar todas las mezclas guardadas, sin depender del mes seleccionado.
@@ -127,7 +127,7 @@ document.addEventListener('click',e=>{
  const index=Number(btn.dataset.deleteManualSession);
  const item=data.consumption[index];
  if(!item||item.kind!=='session')return;
- if(!confirm(`¿Eliminar el registro de ${Number(item.count||0)} sesión(es) del ${item.date||'sin fecha'}?`))return;
+ if(!confirm(`¿Eliminar el registro de ${Number(item.count||0)} sesión(es) del ${item.date||'sin fecha'}? Esta acción solo afecta a las estadísticas.`))return;
  data.consumption.splice(index,1);
  save();
 });

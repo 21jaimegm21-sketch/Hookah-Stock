@@ -26,6 +26,10 @@
     <label>Marca<input id="brand" placeholder="Ej. Al Fakher"></label>
     <label>Sabor<input id="flavor" placeholder="Ej. Doble Manzana"></label>
     <label>Gramos<input id="grams" type="number" min="0.01" step="0.01" placeholder="Ej. 200"></label>
+    <label>Precio de compra (€)<input id="buyPrice" type="number" min="0" step="0.01" placeholder="Opcional"></label>
+    <label>Proveedor<input id="supplier" placeholder="Opcional"></label>
+    <label>Fecha de compra<input id="purchaseDate" type="date"></label>
+    <label>Aviso cuando queden (g)<input id="minStock" type="number" min="0" step="0.1" placeholder="Ej. 20"></label>
   </div>
   <button id="addTobacco">Añadir tabaco</button>
 </section>
@@ -90,7 +94,39 @@
   <button class="danger" id="clearHistory">Borrar movimientos</button>
 </section>
 </main>
-<footer>Tu stock se guarda en este dispositivo. <a href="https://www.instagram.com/NightChillZone/" target="_blank" rel="noopener">@NightChillZone</a></footer>
+
+<section class="panel">
+ <h2>🏠 Panel principal</h2>
+ <div id="dashboardSummary" class="result"></div>
+ <h3>⚠️ Productos por reponer</h3><div id="lowStockList" class="history"></div>
+</section>
+<section class="panel">
+ <h2>💶 Gastos y costes</h2>
+ <div id="financeSummary" class="result"></div>
+ <label>Registrar ingreso (€)<input id="incomeAmount" type="number" min="0.01" step="0.01" placeholder="Importe"></label>
+ <label>Concepto<input id="incomeNote" placeholder="Ej. Sesiones"></label>
+ <button id="addIncome">Registrar ingreso</button>
+ <h3>Ingresos y gastos del mes</h3><div id="financeDetails" class="history"></div>
+</section>
+<section class="panel">
+ <h2>📝 Registrar sesión</h2>
+ <label>Fecha y hora<input id="sessionDateTime" type="datetime-local"></label>
+ <label>Mezcla (opcional)<input id="sessionMixName" placeholder="Nombre o descripción"></label>
+ <label>Cazoleta (opcional)<input id="sessionBowlName" placeholder="Modelo de cazoleta"></label>
+ <label>Carbones utilizados<input id="sessionCoalUnits" type="number" min="0" step="1" placeholder="0"></label>
+ <label>Valoración / observaciones<textarea id="sessionNotes" rows="2" placeholder="Cómo ha ido la sesión..."></textarea></label>
+ <button id="saveSession">Guardar sesión</button>
+ <div id="sessionHistory" class="history"></div>
+</section>
+<section class="panel">
+ <h2>💾 Copias de seguridad e informes</h2>
+ <p class="hint">Guarda una copia del inventario en Archivos. Para restaurarla, selecciona una copia JSON creada por Mi Stock.</p>
+ <button id="exportBackup">Descargar copia de seguridad</button>
+ <label>Restaurar copia JSON<input id="importBackup" type="file" accept="application/json,.json"></label>
+ <button class="secondary" id="exportCSV">Exportar inventario CSV</button>
+ <button class="secondary" id="exportReport">Exportar informe mensual CSV</button>
+</section>
+\n<footer>Tu stock se guarda en este dispositivo. <a href="https://www.instagram.com/NightChillZone/" target="_blank" rel="noopener">@NightChillZone</a></footer>
 <script src="app.js"></script>
 </body>
 </html>

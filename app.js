@@ -172,7 +172,7 @@ $('statsMonth').value=monthNow();
 $('statsMonth').onchange=renderStats;
 $('addSessions').onclick=()=>{const n=Number($('sessionCount').value);if(!Number.isInteger(n)||n<=0){alert('Indica un número de sesiones válido.');return}record('session',{count:n,manual:true});log(`Registradas ${n} sesiones`);$('sessionCount').value='';save();};
 
-// Navegación principal por pestañas
+// Navegación principal
 function showTab(tab){
  document.querySelectorAll('[data-tab]').forEach(el=>{el.hidden=el.dataset.tab!==tab;});
  document.querySelectorAll('[data-tab-target]').forEach(btn=>btn.classList.toggle('active',btn.dataset.tabTarget===tab));

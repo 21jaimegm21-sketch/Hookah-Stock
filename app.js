@@ -39,11 +39,9 @@ function renderStats(){
  $('tobaccoChart').innerHTML=bars(tobacco,'g');
  $('coalChart').innerHTML=bars(coal,'uds.');
  $('dailyStats').innerHTML=Object.keys(days).sort().reverse().map(day=>{const d=days[day],fl=Object.entries(d.tobacco).map(([n,g])=>`${esc(n)}: ${fmt(g)} g`).join('<br>')||'Sin tabaco registrado';return `<div class="stat-day"><strong>${day}</strong><br>${fl}<br>Carbones: ${d.coal} · Sesiones: ${d.sessions}</div>`}).join('')||'<p class="empty">No hay actividad registrada en este mes.</p>';
- // Sesiones añadidas manualmente: se pueden borrar desde Estadísticas sin tocar las mezclas.
- let manualList=$('manualSessionsList');
- if(!manualList){manualList=document.createElement('div');manualList.id='manualSessionsList';$('dailyStats').insertAdjacentElement('afterend',manualList);}
- const manual=data.consumption.map((e,i)=>({e,i})).filter(x=>x.e.kind==='session').sort((a,b)=>String(b.e.date).localeCompare(String(a.e.date)));
- manualList.innerHTML='<h3>Sesiones registradas manualmente</h3>'+(manual.length?manual.map(({e,i})=>`<div class="history-item"><strong>${esc(e.date||'Sin fecha')}</strong><div>${Number(e.count||0)} sesión(es)</div><button class="delete" data-delete-manual-session="${i}">🗑 Eliminar sesión</button></div>`).join(''):'<p class="empty">No hay sesiones manuales registradas.</p>');
+ // Sesiones registradas manualmente: lista visible dentro de Estadísticas.
+ const manual=data.consumption.map((e,i)=>({e,i})).filter(x=>x.e.kind==='session' && x.e.manual===true).sort((a,b)=>String(b.e.date).localeCompare(String(a.e.date)));
+ $('manualSessionsList').innerHTML=manual.length?manual.map(({e,i})=>`<div class="history-item"><strong>${esc(e.date||'Sin fecha')}</strong><div>${Number(e.count||0)} sesión(es)</div><button class="delete" data-delete-manual-session="${i}">🗑 Eliminar sesión</button></div>`).join(''):'<p class="empty">No hay sesiones manuales registradas.</p>';
 
  // Mostrar todas las mezclas guardadas, sin depender del mes seleccionado.
  $('statsMixList').innerHTML=data.mixes.length?data.mixes.map(m=>{
@@ -145,7 +143,7 @@ document.addEventListener('click',e=>{
 $('clearHistory').onclick=()=>{if(confirm('¿Borrar todo el historial de movimientos?')){data.history=[];save();}};
 $('statsMonth').value=monthNow();
 $('statsMonth').onchange=renderStats;
-$('addSessions').onclick=()=>{const n=Number($('sessionCount').value);if(!Number.isInteger(n)||n<=0){alert('Indica un número de sesiones válido.');return}record('session',{count:n});log(`Registradas ${n} sesiones`);$('sessionCount').value='';save();};
+$('addSessions').onclick=()=>{const n=Number($('sessionCount').value);if(!Number.isInteger(n)||n<=0){alert('Indica un número de sesiones válido.');return}record('session',{count:n,manual:true});log(`Registradas ${n} sesiones`);$('sessionCount').value='';save();};
 if(!$('mixParts').children.length)addMixRow('100');
 render();renderStats();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));

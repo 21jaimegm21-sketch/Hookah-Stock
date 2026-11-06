@@ -39,6 +39,15 @@ function renderStats(){
  $('tobaccoChart').innerHTML=bars(tobacco,'g');
  $('coalChart').innerHTML=bars(coal,'uds.');
  $('dailyStats').innerHTML=Object.keys(days).sort().reverse().map(day=>{const d=days[day],fl=Object.entries(d.tobacco).map(([n,g])=>`${esc(n)}: ${fmt(g)} g`).join('<br>')||'Sin tabaco registrado';return `<div class="stat-day"><strong>${day}</strong><br>${fl}<br>Carbones: ${d.coal} · Sesiones: ${d.sessions}</div>`}).join('')||'<p class="empty">No hay actividad registrada en este mes.</p>';
+ const mixGroups={};
+ events.filter(e=>e.mixId).forEach(e=>{
+  const g=mixGroups[e.mixId]||(mixGroups[e.mixId]={date:e.date,items:[],grams:0,sessions:0});
+  if(e.kind==='tobacco'){g.items.push(`${e.name}: ${fmt(e.grams)} g`);g.grams+=Number(e.grams||0);}
+  if(e.kind==='session')g.sessions+=Number(e.count||0);
+ });
+ const groups=Object.entries(mixGroups);
+ $('statsMixList').innerHTML=groups.length?groups.map(([id,g])=>`<div class="history-item"><strong>Mezcla · ${esc(g.date)}</strong><div>${g.items.map(esc).join('<br>')}</div><small>${fmt(g.grams)} g · ${g.sessions} sesiones</small><button class="delete" data-delete-stat-mix="${esc(id)}">🗑 Eliminar de estadísticas</button></div>`).join(''):'<p class="empty">No hay mezclas registradas en las estadísticas de este mes.</p>';
+
 }
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -109,6 +118,16 @@ document.addEventListener('click',e=>{
  if(el.dataset.deleteCoal!==undefined){const i=+el.dataset.deleteCoal,c=data.coals[i];if(c&&confirm(`¿Eliminar la marca de carbón ${c.brand} y sus ${c.units} unidades?`)){data.coals.splice(i,1);log(`Eliminada marca de carbón ${c.brand}`);save();}}
  if(el.dataset.deleteBowl!==undefined){const i=+el.dataset.deleteBowl,b=data.bowls[i];if(b&&confirm(`¿Eliminar la cazoleta ${b.name} · ${b.brand}?`)){data.bowls.splice(i,1);log(`Eliminada cazoleta ${b.name} · ${b.brand}`);save();}}
  if(el.dataset.deleteMix!==undefined){const i=+el.dataset.deleteMix;if(confirm('¿Eliminar esta mezcla y sus datos asociados de las estadísticas? Los gramos descontados NO se devolverán al stock.')){const mix=data.mixes[i];if(mix){if(mix.id){data.consumption=data.consumption.filter(e=>e.mixId!==mix.id);data.history=data.history.filter(h=>h.mixId!==mix.id);}data.mixes.splice(i,1);save();}}}
+});
+document.addEventListener('click',e=>{
+ const btn=e.target.closest('[data-delete-stat-mix]');
+ if(!btn)return;
+ const id=btn.dataset.deleteStatMix;
+ if(!confirm('¿Eliminar esta mezcla de las estadísticas? Se borrarán sus registros de consumo y sesión. Los gramos NO se devolverán al stock.'))return;
+ data.consumption=data.consumption.filter(item=>item.mixId!==id);
+ data.history=data.history.filter(item=>item.mixId!==id);
+ data.mixes=data.mixes.filter(item=>item.id!==id);
+ save();
 });
 $('clearHistory').onclick=()=>{if(confirm('¿Borrar todo el historial de movimientos?')){data.history=[];save();}};
 $('statsMonth').value=monthNow();

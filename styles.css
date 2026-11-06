@@ -63,3 +63,20 @@ footer a{color:#d78aff}
 .low-stock-banner strong{display:block;color:#ff91b2;margin-bottom:5px}
 .stock-warning{display:block;margin-top:5px;color:#ff91b2;font-size:.88em;font-weight:800}
 .stock-ok{margin:8px 0 14px;padding:10px 12px;border:1px solid #4c9b79;border-radius:10px;color:#a8e8c8;background:#10271f}
+
+/* Panel de estadísticas con gráficas neón */
+.stats-chart{background:linear-gradient(145deg,#1b0b25,#100815);border:1px solid #8730a8;border-radius:16px;padding:14px;overflow:hidden;box-shadow:inset 0 0 22px #7b19a51a}
+.compare-chart,.week-chart{display:flex;align-items:flex-end;justify-content:space-around;gap:12px;min-height:150px;padding:12px 4px 4px;border-bottom:1px solid #80518e}
+.compare-col,.week-col{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;height:150px;text-align:center;font-size:11px;color:#e8d7f2}
+.compare-col strong,.week-col strong{font-size:12px;color:#fff}
+.compare-col span,.week-col span{font-size:10px;color:#c8a9d7;white-space:nowrap}
+.compare-bar,.week-bar{width:min(48px,75%);border-radius:9px 9px 2px 2px;background:linear-gradient(180deg,#e77aff,#8414bd);box-shadow:0 0 14px #bd36e866;min-height:4px}
+.compare-bar.previous{background:linear-gradient(180deg,#9e54c4,#542078);box-shadow:none}
+.chart-note{font-size:11px;color:#b99ac7;text-align:center;margin:10px 0 2px}
+.rank-chart{display:grid;gap:13px}
+.rank-row{display:grid;gap:6px}
+.rank-label{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#f0e2f5}
+.rank-label strong{white-space:nowrap;color:#fff}
+.stats-chart .stat-track{height:13px;background:#392044;border-radius:20px}
+.stats-chart .stat-fill{background:linear-gradient(90deg,#8313c5,#d75cff);box-shadow:0 0 10px #b62be766}
+.panel h3{font-size:15px;color:#f0c4ff;margin:20px 0 9px}

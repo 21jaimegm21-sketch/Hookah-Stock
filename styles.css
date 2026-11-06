@@ -80,3 +80,16 @@ footer a{color:#d78aff}
 .stats-chart .stat-track{height:13px;background:#392044;border-radius:20px}
 .stats-chart .stat-fill{background:linear-gradient(90deg,#8313c5,#d75cff);box-shadow:0 0 10px #b62be766}
 .panel h3{font-size:15px;color:#f0c4ff;margin:20px 0 9px}
+
+/* Navegación principal por secciones */
+.main-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:16px 0 8px;padding:7px;background:#13091d;border:1px solid #63217d;border-radius:15px;position:sticky;top:0;z-index:20;box-shadow:0 5px 18px #0008}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;padding:8px 2px;border:1px solid transparent;border-radius:11px;background:transparent;color:#d9c2e4;font-size:clamp(9px,2.7vw,12px);white-space:nowrap}
+.nav-item span{font-size:22px;line-height:1;color:#e58aff}
+.nav-item.active{background:linear-gradient(145deg,#7410a2,#310947);border-color:#d43aff;color:#fff;box-shadow:0 0 13px #b32de477}
+.nav-item.active span{color:#fff}
+[data-tab][hidden]{display:none!important}
+.home-welcome{text-align:center;padding:25px 16px}
+.home-welcome p{color:#d2b9df;line-height:1.5}
+.home-shortcuts{display:grid;grid-template-columns:1fr;gap:9px;margin-top:18px}
+.home-shortcuts button{background:linear-gradient(90deg,#551078,#8b20b6);border:1px solid #c64aff}
+@media(min-width:600px){.home-shortcuts{grid-template-columns:repeat(3,1fr)}}

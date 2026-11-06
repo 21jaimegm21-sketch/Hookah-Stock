@@ -171,6 +171,17 @@ $('clearHistory').onclick=()=>{if(confirm('¿Borrar todo el historial de movimie
 $('statsMonth').value=monthNow();
 $('statsMonth').onchange=renderStats;
 $('addSessions').onclick=()=>{const n=Number($('sessionCount').value);if(!Number.isInteger(n)||n<=0){alert('Indica un número de sesiones válido.');return}record('session',{count:n,manual:true});log(`Registradas ${n} sesiones`);$('sessionCount').value='';save();};
+
+// Navegación principal por pestañas
+function showTab(tab){
+ document.querySelectorAll('[data-tab]').forEach(el=>{el.hidden=el.dataset.tab!==tab;});
+ document.querySelectorAll('[data-tab-target]').forEach(btn=>btn.classList.toggle('active',btn.dataset.tabTarget===tab));
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-tab-target]').forEach(btn=>btn.addEventListener('click',()=>showTab(btn.dataset.tabTarget)));
+document.querySelectorAll('[data-go]').forEach(btn=>btn.addEventListener('click',()=>showTab(btn.dataset.go)));
+showTab('home');
+
 if(!$('mixParts').children.length)addMixRow('100');
 render();renderStats();
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));

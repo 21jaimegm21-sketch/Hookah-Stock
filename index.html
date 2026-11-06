@@ -36,8 +36,8 @@
 <section class="panel" data-tab="stock">
   <h2>＋ Añadir tabaco</h2>
   <div class="grid">
-    <label>Marca<input id="brand" placeholder="Ej. Al Fakher"></label>
-    <label>Sabor<input id="flavor" placeholder="Ej. Doble Manzana"></label>
+    <label>Marca<input id="brand" list="brandCatalog" placeholder="Ej. Al Fakher" autocomplete="off"><datalist id="brandCatalog"></datalist></label>
+    <label>Sabor<input id="flavor" list="flavorCatalog" placeholder="Ej. Doble Manzana" autocomplete="off"><datalist id="flavorCatalog"></datalist></label>
     <label>Gramos<input id="grams" type="number" min="0.01" step="0.01" placeholder="Ej. 200"></label>
   </div>
   <button id="addTobacco">Añadir tabaco</button>

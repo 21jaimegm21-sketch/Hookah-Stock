@@ -8,3 +8,6 @@ Antes de actualizar, exporta una copia de seguridad JSON desde la aplicación. D
 Catálogo incorporado: 15 marcas y 363 sabores (sugerencias al escribir la marca y el sabor en «Añadir tabaco»). La entrada manual sigue permitida. El catálogo no añade productos al stock automáticamente; solo facilita seleccionarlos al registrar existencias.
 
 Actualización del recetario: «Mis mezclas» ahora es un recetario manual. Preparar una mezcla descuenta tabaco y carbón y registra el consumo para las estadísticas, pero no la añade automáticamente al recetario. Después de calcularla, se puede pulsar «Guardar como receta» y asignarle un nombre. Las recetas guardadas se pueden eliminar sin modificar el inventario. Las mezclas de consumo anteriores se conservan en los datos de estadísticas; no se convierten automáticamente en recetas.
+
+
+Actualización visual: «Mezclas registradas en estadísticas» ahora aparece dentro de un desplegable cerrado por defecto para evitar que la lista ocupe toda la pantalla. El contenido y los controles de eliminación se mantienen.

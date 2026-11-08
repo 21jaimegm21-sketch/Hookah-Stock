@@ -25,6 +25,43 @@ const log=text=>{data.history.unshift({text,at:new Date().toLocaleString('es-ES'
 data.consumption=Array.isArray(source.consumption)?source.consumption:[];
 const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const record=(kind,details)=>data.consumption.push({date:today(),kind,...details});
+
+// Recuperar mezclas preparadas en versiones anteriores que descontaron stock,
+// pero no llegaron a guardarse en data.mixes. Se reconstruyen desde consumo e historial.
+(()=>{
+ const known=new Set(data.mixes.map(m=>String(m.id)));
+ const groups=new Map();
+ data.consumption.filter(e=>e.mixId).forEach(e=>{
+  const id=String(e.mixId);
+  if(known.has(id))return;
+  if(!groups.has(id))groups.set(id,[]);
+  groups.get(id).push(e);
+ });
+ let recovered=false;
+ for(const [id,events] of groups){
+  const tobacco=events.filter(e=>e.kind==='tobacco');
+  if(!tobacco.length)continue;
+  const coal=events.find(e=>e.kind==='coal');
+  const session=events.find(e=>e.kind==='session');
+  const hist=data.history.find(h=>String(h.mixId)===id);
+  const text=hist?.text||'';
+  const bowlMatch=text.match(/^Mezcla (.*?):/);
+  const parts=tobacco.map(e=>({name:e.name||'Tabaco',grams:Number(e.grams||0),percent:0}));
+  const total=parts.reduce((sum,p)=>sum+p.grams,0);
+  data.mixes.push({
+   id,
+   date:hist?.at||events[0]?.date||'Fecha anterior',
+   bowl:bowlMatch?.[1]||'Mezcla recuperada',
+   total,
+   parts,
+   coalBrand:coal?.name||'',
+   coalUnits:Number(coal?.units||0),
+   recovered:true
+  });
+  recovered=true;
+ }
+ if(recovered)localStorage.setItem(KEY,JSON.stringify({...data,consumption:data.consumption}));
+})();
 const monthNow=()=>today().slice(0,7);
 function renderStats(){
  const month=$('statsMonth').value||monthNow(), events=data.consumption.filter(e=>e.date&&e.date.startsWith(month));
@@ -148,6 +185,8 @@ $('calculateMix').onclick=()=>{
  coalStock.units=Number(coalStock.units)-coalUnits;
  const mixId=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());
  const mix={id:mixId,date:new Date().toLocaleString('es-ES'),bowl:`${bowl.name} · ${bowl.brand}`,total,parts:calculated.map(x=>({name:`${x.tobacco.brand} · ${x.tobacco.flavor}`,grams:x.grams,percent:x.percent})),coalBrand:coalStock.brand,coalUnits};
+ // Guardar la preparación en el historial de mezclas de Estadísticas, sin añadirla al recetario manual.
+ data.mixes.unshift(mix);
  lastCalculatedMix={...mix,parts:mix.parts.map(x=>({...x}))};
 calculated.forEach(x=>record('tobacco',{mixId,name:`${x.tobacco.brand} · ${x.tobacco.flavor}`,grams:x.grams}));record('coal',{mixId,name:coalStock.brand,units:coalUnits});record('session',{mixId,count:1});
  $('mixCoalUse').value='';

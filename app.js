@@ -3,7 +3,7 @@ const KEY='mi-stock-v1';
 const LEGACY_KEY='mi-stock-v2';
 const readJSON=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch{return null}};
 const old1=readJSON(KEY), old2=readJSON(LEGACY_KEY);
-let source=old2 || old1 || {};
+let source=old1 || old2 || {};
 const data={
  tobacco:Array.isArray(source.tobacco)?source.tobacco:[],
  coals:Array.isArray(source.coals)?source.coals.map(c=>typeof c==='string'?{brand:c,units:0}:c):[],
@@ -14,8 +14,8 @@ const data={
 };
 // Si existe v2, se toma como la versión más reciente. La copia v2 original no se borra.
 if(typeof source.coals==='number' && source.coals>0) data.coals=[{brand:'Sin marca (stock anterior)',units:source.coals}];
-if(old2) {
-  // Se conserva una copia intacta de la estructura antigua; la app nueva escribe en mi-stock-v1.
+if(!old1 && old2) {
+  // Migrar v2 solo si todavía no existe la base v1. Nunca sobrescribir datos nuevos con una copia antigua.
   localStorage.setItem(KEY,JSON.stringify(data));
 }
 const $=id=>document.getElementById(id);

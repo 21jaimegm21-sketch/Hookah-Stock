@@ -11,3 +11,6 @@ Actualización del recetario: «Mis mezclas» ahora es un recetario manual. Prep
 
 
 Actualización visual: «Mezclas registradas en estadísticas» ahora aparece dentro de un desplegable cerrado por defecto para evitar que la lista ocupe toda la pantalla. El contenido y los controles de eliminación se mantienen.
+
+
+Corrección v19: se prioriza mi-stock-v1 frente a la copia heredada mi-stock-v2 y solo se migra v2 cuando no existe v1. Esto evita que una copia antigua sobrescriba mezclas y estadísticas nuevas. Caché PWA renovada.

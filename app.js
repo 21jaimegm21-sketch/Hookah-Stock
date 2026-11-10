@@ -232,6 +232,24 @@ $('statsMonth').value=monthNow();
 $('statsMonth').onchange=renderStats;
 $('addSessions').onclick=()=>{const n=Number($('sessionCount').value);if(!Number.isInteger(n)||n<=0){alert('Indica un número de sesiones válido.');return}record('session',{count:n,manual:true});log(`Registradas ${n} sesiones`);$('sessionCount').value='';save();};
 
+// Reinicio total de datos operativos; el catálogo flavorCatalog permanece intacto.
+$('resetApp').onclick=()=>{
+ if(!confirm('¿Seguro que quieres reiniciar Mi Stock? Se borrarán todas las existencias, cazoletas, recetas, movimientos, sesiones y estadísticas. El catálogo de marcas y sabores se conservará.'))return;
+ if(!confirm('ÚLTIMA CONFIRMACIÓN: esta acción no se puede deshacer. ¿Borrar todos los datos operativos?'))return;
+ data.tobacco=[];
+ data.coals=[];
+ data.bowls=[];
+ data.history=[];
+ data.mixes=[];
+ data.recipes=[];
+ data.consumption=[];
+ // Guardar el estado vacío en la clave principal evita que una copia antigua se vuelva a importar.
+ localStorage.setItem(KEY,JSON.stringify({...data}));
+ ['coalBrand','coalAdd','bowlName','bowlBrand','bowlGrams','sessionCount','consumeGrams','coalUse','mixCoalUse'].forEach(id=>{if($(id))$(id).value='';});
+ alert('Mi Stock se ha reiniciado. El catálogo de marcas y sabores sigue intacto.');
+ save();
+};
+
 // Navegación principal
 function showTab(tab){
  document.querySelectorAll('[data-tab]').forEach(el=>{el.hidden=el.dataset.tab!==tab;});
